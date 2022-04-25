@@ -69,6 +69,7 @@ func (c *Client) SendMessage(chatId int, text string, replymarkup string) error 
 
 // отправка запроса
 
+//TODO в отдельный пакет
 func (c *Client) doRequest(method string, query url.Values) (data []byte, err error) {
 
 	defer func() { err = e.WrapIfErr("doRequest не могу выполнить запрос ", err) }()
