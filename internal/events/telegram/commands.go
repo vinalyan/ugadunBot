@@ -28,7 +28,7 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 
 	log.Printf("Получена новая команда %s от %s", text, username)
 
-	//проверяем, что это комнада добавления
+	//TODO переделать это в более адкеватный вид.
 	switch text {
 	case StartCmd:
 		p.tg.SendMessage(chatID, msgHello, keyboardRemuve)
@@ -40,7 +40,6 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 	case HelpCmd:
 		p.tg.SendMessage(chatID, msgHelp, keyboardRemuve)
 		p.tg.SendMessage(chatID, msgAnswer, keyboardNext)
-		//TODO тут прям затык будет надо залепить
 	case ReloadCmd:
 		p.tg.SendMessage(chatID, msgReload, keyboardRemuve)
 		p.tg.SendMessage(chatID, msgFirstCard, noKeyboard)
