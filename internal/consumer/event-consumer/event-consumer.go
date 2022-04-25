@@ -50,7 +50,6 @@ func (c Consumer) Start() error {
 1. потеря событий: ретраи, возращение в хранилише, фолбэкб, подтверждение для фетчера,
 2. ОБработка всей пачки. Остановка поле ошибки,
 3. Праллельная обработка.
-TODO посмотреть функцию waitGroup
 */
 func (c *Consumer) hadleEvents(events []events.Event) error {
 	for _, event := range events {

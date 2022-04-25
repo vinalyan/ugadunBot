@@ -48,11 +48,9 @@ func (c *Client) Updates(offset int, limit int) ([]Update, error) {
 	//пасрим JSON
 	var res UpdatesResponse
 
-	//TODO json.Unmarshal(data,&res) как это устроено?
 	if err := json.Unmarshal(data, &res); err != nil {
 		return nil, err
 	}
-	//TODO составить список различных типов данных
 	return res.Result, nil
 }
 
@@ -84,11 +82,7 @@ func (c *Client) doRequest(method string, query url.Values) (data []byte, err er
 	if err != nil {
 		return nil, err
 	}
-	//TODO почитать про errors.Is() и errors.As()
-
 	req.URL.RawQuery = query.Encode()
-
-	//log.Printf("doRequest req = %s", req.URL)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
