@@ -10,7 +10,7 @@ import (
 //получить данные
 type Distributer struct {
 	host  string
-	cards cards.Cards
+	Cards cards.Cards
 	token string
 	//client client.Client
 }
@@ -19,7 +19,7 @@ func New(host string, token string) *Distributer {
 	return &Distributer{
 		host:  host,
 		token: token,
-		cards: cards.Cards{},
+		Cards: cards.Cards{},
 		//client: client.Client{},
 	}
 }
@@ -32,12 +32,12 @@ func (d Distributer) Data() (cards cards.Cards, err error) {
 
 	data, err := cl.DoRequest("", nil)
 	if err != nil {
-		return d.cards, err
+		return d.Cards, err
 	}
 
-	if err := json.Unmarshal(data, &d.cards); err != nil {
-		return d.cards, err
+	if err := json.Unmarshal(data, &d.Cards); err != nil {
+		return d.Cards, err
 	}
 
-	return d.cards, nil
+	return d.Cards, nil
 }

@@ -3,13 +3,15 @@ package telegram
 import (
 	"errors"
 	"ugadunbot/internal/clients/telegram"
+	"ugadunbot/internal/distributer"
 	"ugadunbot/internal/events"
 	"ugadunbot/internal/lib/e"
 )
 
 type Processor struct {
-	tg     *telegram.Client
-	offset int
+	tg          *telegram.Client
+	offset      int
+	distributer distributer.Distributer
 }
 
 type Meta struct {
@@ -22,10 +24,11 @@ var (
 	ErrUnknownMetaType  = errors.New("не известная мета")
 )
 
-func New(client *telegram.Client) *Processor {
+func New(client *telegram.Client, dist distributer.Distributer) *Processor {
 	return &Processor{
-		tg:     client,
-		offset: 0,
+		tg:          client,
+		offset:      0,
+		distributer: dist,
 	}
 
 }

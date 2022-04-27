@@ -3,6 +3,7 @@ package telegram
 import (
 	"log"
 	"strings"
+	"ugadunbot/internal/cards"
 )
 
 const (
@@ -22,6 +23,9 @@ const (
 	noKeyboard     = ""
 )
 
+//TODO подумать как это сделать нормальным
+var rndCard = new(cards.Card)
+
 //TODO тут надо правильно обработать ошибки
 func (p *Processor) doCmd(text string, chatID int, username string) error {
 	text = strings.TrimSpace(text)
@@ -31,21 +35,51 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 	//TODO переделать это в более адкеватный вид.
 	switch text {
 	case StartCmd:
-		p.tg.SendMessage(chatID, msgHello, keyboardRemuve)
-		p.tg.SendMessage(chatID, msgQuestion, keyboardAnswer)
+		err := p.startCmd(chatID)
+		if err != nil {
+			return err
+		}
 	case AnswerCmd:
-		p.tg.SendMessage(chatID, msgAnswer, keyboardNext)
+		err := p.answerCmd(chatID)
+		if err != nil {
+			return err
+		}
 	case NextCmd:
 		p.tg.SendMessage(chatID, msgQuestion, keyboardAnswer)
 	case HelpCmd:
 		p.tg.SendMessage(chatID, msgHelp, keyboardRemuve)
 		p.tg.SendMessage(chatID, msgAnswer, keyboardNext)
 	case ReloadCmd:
+		p.distributer.Data()
 		p.tg.SendMessage(chatID, msgReload, keyboardRemuve)
 		p.tg.SendMessage(chatID, msgFirstCard, noKeyboard)
 		p.tg.SendMessage(chatID, msgQuestion, keyboardAnswer)
 	default:
 		p.tg.SendMessage(chatID, msgUnknownCommand, keyboardRemuve)
 	}
+	return nil
+}
+
+func (p *Processor) startCmd(chatID int) error {
+	cards, err := p.distributer.Data()
+	if err != nil {
+		p.tg.SendMessage(chatID, "Что-то дико пошло не так", keyboardRemuve)
+		return err
+	}
+
+	rndCard, err = cards.Random()
+
+	if err != nil {
+		p.tg.SendMessage(chatID, "Что-то дико пошло не так", keyboardRemuve)
+		return err
+	}
+	p.tg.SendMessage(chatID, msgHello, keyboardRemuve)
+	p.tg.SendMessage(chatID, rndCard.Value, keyboardAnswer)
+	log.Printf(rndCard.Name)
+	return nil
+}
+
+func (p *Processor) answerCmd(chatID int) error {
+	p.tg.SendMessage(chatID, rndCard.Name, keyboardNext)
 	return nil
 }
