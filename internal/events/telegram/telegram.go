@@ -2,6 +2,7 @@ package telegram
 
 import (
 	"errors"
+	"ugadunbot/internal/cards"
 	"ugadunbot/internal/clients/telegram"
 	"ugadunbot/internal/distributer"
 	"ugadunbot/internal/events"
@@ -12,6 +13,7 @@ type Processor struct {
 	tg          *telegram.Client
 	offset      int
 	distributer distributer.Distributer
+	cards       cards.Cards
 }
 
 type Meta struct {

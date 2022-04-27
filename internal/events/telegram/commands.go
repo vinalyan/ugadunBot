@@ -45,15 +45,22 @@ func (p *Processor) doCmd(text string, chatID int, username string) error {
 			return err
 		}
 	case NextCmd:
-		p.tg.SendMessage(chatID, msgQuestion, keyboardAnswer)
+		err := p.nextCmd(chatID)
+		if err != nil {
+			return err
+		}
+
 	case HelpCmd:
 		p.tg.SendMessage(chatID, msgHelp, keyboardRemuve)
-		p.tg.SendMessage(chatID, msgAnswer, keyboardNext)
+		err := p.nextCmd(chatID)
+		if err != nil {
+			return err
+		}
 	case ReloadCmd:
-		p.distributer.Data()
-		p.tg.SendMessage(chatID, msgReload, keyboardRemuve)
-		p.tg.SendMessage(chatID, msgFirstCard, noKeyboard)
-		p.tg.SendMessage(chatID, msgQuestion, keyboardAnswer)
+		err := p.startCmd(chatID)
+		if err != nil {
+			return err
+		}
 	default:
 		p.tg.SendMessage(chatID, msgUnknownCommand, keyboardRemuve)
 	}
@@ -67,19 +74,34 @@ func (p *Processor) startCmd(chatID int) error {
 		return err
 	}
 
-	rndCard, err = cards.Random()
+	//TODO обязательно полечить эту историю с указателями
 
+	p.cards = cards
+	rndCard, err = p.cards.Random()
 	if err != nil {
 		p.tg.SendMessage(chatID, "Что-то дико пошло не так", keyboardRemuve)
 		return err
 	}
 	p.tg.SendMessage(chatID, msgHello, keyboardRemuve)
 	p.tg.SendMessage(chatID, rndCard.Value, keyboardAnswer)
-	log.Printf(rndCard.Name)
+
 	return nil
 }
 
 func (p *Processor) answerCmd(chatID int) error {
+
 	p.tg.SendMessage(chatID, rndCard.Name, keyboardNext)
+	return nil
+}
+
+func (p *Processor) nextCmd(chatID int) error {
+	card, err := p.cards.Random()
+
+	if err != nil {
+		p.tg.SendMessage(chatID, "Что-то дико пошло не так", keyboardRemuve)
+		return err
+	}
+	rndCard = card
+	p.tg.SendMessage(chatID, rndCard.Value, keyboardAnswer)
 	return nil
 }
