@@ -2,9 +2,9 @@ package cards
 
 import (
 	"errors"
-	"getpict/internal/lib/e"
 	"math/rand"
 	"time"
+	"ugadunbot/internal/lib/e"
 )
 
 type Card struct {

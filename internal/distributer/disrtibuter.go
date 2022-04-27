@@ -2,8 +2,8 @@ package distributer
 
 import (
 	"encoding/json"
-	cards "getpict/internal/cards"
-	client "getpict/internal/clients/http"
+	cards "ugadunbot/internal/cards"
+	client "ugadunbot/internal/clients/http"
 )
 
 //получить данные
