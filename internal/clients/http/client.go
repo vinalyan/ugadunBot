@@ -51,6 +51,5 @@ func (c *Client) DoRequest(method string, query url.Values) (data []byte, err er
 	if err != nil {
 		return nil, err
 	}
-
 	return body, nil
 }
